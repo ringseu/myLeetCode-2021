@@ -17,12 +17,22 @@ public:
         ListNode *b = head;
         ListNode *p = head->next;
 
-        ListNode *right = reverseList(p);
-        p->next = b;
+        while (p && p->next)
+        {
+            ListNode *tmp = b;
+            b = p;
+            p = p->next;
+            b->next = tmp;
+            if (tmp == head)
+                tmp->next = NULL;
+        }
 
-        if (b == head)
-            b->next = NULL;
+        ListNode *tmp = b;
+        b = p;
+        b->next = tmp;
+        if (tmp == head)
+            tmp->next = NULL;
 
-        return right;
+        return b;
     }
 };
