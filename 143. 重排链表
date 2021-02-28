@@ -1,0 +1,77 @@
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode() : val(0), next(nullptr) {}
+ *     ListNode(int x) : val(x), next(nullptr) {}
+ *     ListNode(int x, ListNode *next) : val(x), next(next) {}
+ * };
+ */
+class Solution {
+public:
+    void reorderList(ListNode* head) {
+        if (!head || !head->next)
+            return;
+
+        //将链表分为前后两半
+        ListNode *half = NULL;
+        ListNode *slow = head;
+        ListNode *fast = head;
+
+        while (fast)
+        {
+            if (fast->next && fast->next->next)
+            {
+                fast = fast->next->next;
+                slow = slow->next;
+            }
+            else if (fast->next)
+            {
+                fast = fast->next;
+            }
+            else
+            {
+                half = slow->next;
+                slow->next = NULL;
+                break;
+            }
+        }
+
+        //反转后一半
+        half = reverseList(half);
+
+        //合并两个链表
+        ListNode *p1 = head;
+        ListNode *p2 = half;
+
+        while (p1 && p2)
+        {
+            ListNode *tmp1 = p1->next;
+            ListNode *tmp2 = p2->next;
+
+            p1->next = p2;
+            p2->next = tmp1;
+            p1 = tmp1;
+            p2 = tmp2;
+        }
+
+        return;
+    }
+
+    ListNode* reverseList(ListNode* head)
+    {
+        ListNode *dummyHead = NULL;
+        ListNode *p = head;
+
+        while (p)
+        {
+            ListNode *tmp = p->next;
+            p->next = dummyHead;
+            dummyHead = p;
+            p = tmp;
+        }
+
+        return dummyHead;
+    }
+};
