@@ -1,0 +1,28 @@
+class Solution {
+public:
+    int removeDuplicates(vector<int>& nums) {
+        if (nums.size() == 0)
+        {
+            return 0;
+        }
+
+        int left = 0, right = 1, prev = nums[0];
+
+        while (right < nums.size())
+        {
+            if (nums[right] == prev)
+            {
+                ++right;
+            }
+            else
+            {
+                ++left;
+                nums[left] = nums[right];
+                prev = nums[left];
+                ++right;
+            }
+        }
+
+        return left + 1;
+    }
+};
