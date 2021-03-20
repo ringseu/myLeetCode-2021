@@ -1,0 +1,71 @@
+class Solution {
+public:
+    vector<vector<int>> generateMatrix(int n) {
+        vector<vector<int>> result(n, vector<int>(n, 0));
+
+        int num = 1;
+        fillMatrix(0, 0, result, 0, n-1, 0, n-1, "right", num);
+
+        return result;
+    }
+
+    void fillMatrix(int i, int j, vector<vector<int>> &matrix, int left, int right, int up, int down, const string &direction, int &num)
+    {
+        if (direction == "right")
+        {
+            if (i < up || i > down)
+            {
+                return;
+            }
+            while (j <= right)
+            {
+                matrix[i][j] = num;
+                ++num;
+                ++j;
+            }
+            fillMatrix(i+1, right, matrix, left, right, up+1, down, "down", num);
+        }
+        else if (direction == "down")
+        {
+            if (j < left || j > right)
+            {
+                return;
+            }
+            while (i <= down)
+            {
+                matrix[i][j] = num;
+                ++num;
+                ++i;
+            }
+            fillMatrix(down, j-1, matrix, left, right-1, up, down, "left", num);
+        }
+        else if (direction == "left")
+        {
+            if (i < up || i > down)
+            {
+                return;
+            }
+            while (j >= left)
+            {
+                matrix[i][j] = num;
+                ++num;
+                --j;
+            }
+            fillMatrix(i-1, left, matrix, left, right, up, down-1, "up", num);
+        }
+        else if (direction == "up")
+        {
+            if (j < left || j > right)
+            {
+                return;
+            }
+            while (i >= up)
+            {
+                matrix[i][j] = num;
+                ++num;
+                --i;
+            }
+            fillMatrix(up, j+1, matrix, left+1, right, up, down, "right", num);
+        }
+    }
+};
