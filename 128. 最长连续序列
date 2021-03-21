@@ -6,25 +6,68 @@ public:
             return nums.size();
         }
 
-        sort(nums.begin(), nums.end());
+        unordered_set<int> tmp;
+        int max = 0;
 
-        int i = 1, max = 1, len = 1;
-        while (i < nums.size())
+        //记录所有元素到哈希表
+        for (int i = 0; i < nums.size(); ++i)
         {
-            if (nums[i] - nums[i-1] == 1)   //连续数字，更新一下长度
+            tmp.insert(nums[i]);
+        }
+
+        //再遍历一次，寻找最大长度
+        for (int i = 0; i < nums.size(); ++i)
+        {
+            //如果这个数不在哈希表中，说明已经被处理过了，跳过
+            if (tmp.end() == tmp.find(nums[i]))
             {
-                ++len;
-                if (len > max)
+                continue;
+            }
+
+            //找到一个没被处理过的数，以它为中点，往前寻找最长序列，往后寻找最长序列，把前后两个值相加
+            //每找到一个数，就把它从哈希表中删掉，避免重复处理
+            int middle = nums[i], left_len = 0, right_len = 0;
+
+            //往前寻找
+            int current = middle - 1;
+            while (true)
+            {
+                if (tmp.end() != tmp.find(current)) //有这个数，递增序列长度，并把它从哈希表删除
                 {
-                    max = len;
+                    ++left_len;
+                    tmp.erase(current);
+                    --current;
+                }
+                else    //找不到了，跳出
+                {
+                    break;
                 }
             }
-            else if (nums[i] != nums[i-1])
+
+            //往后寻找，同理
+            current = middle + 1;
+            while (true)
             {
-                len = 1;
+                if (tmp.end() != tmp.find(current))
+                {
+                    ++right_len;
+                    tmp.erase(current);
+                    ++current;
+                }
+                else
+                {
+                    break;
+                }
             }
 
-            ++i;
+            //计算序列长度
+            int len = left_len + right_len + 1;
+            if (len > max)
+            {
+                max = len;
+            }
+
+            tmp.erase(middle);
         }
 
         return max;
