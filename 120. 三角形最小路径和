@@ -1,0 +1,44 @@
+class Solution {
+public:
+    int minimumTotal(vector<vector<int>>& triangle) {
+        if (triangle.size() == 0)
+        {
+            return 0;
+        }
+
+        vector<vector<int>> dp(triangle);
+
+        for (int i = 1; i < triangle.size(); ++i)
+        {
+            vector<int> &prev = dp[i-1];    //上一层
+            vector<int> &current = dp[i];   //这一层
+            for (int j = 0; j < current.size(); ++j)
+            {
+                if (j == 0) //头
+                {
+                    current[j] = prev[j] + triangle[i][j];
+                }
+                else if (j == current.size() - 1)   //尾
+                {
+                    current[j] = prev[j-1] + triangle[i][j];
+                }
+                else    //中间
+                {
+                    current[j] = min(prev[j], prev[j-1]) + triangle[i][j];
+                }
+            }
+        }
+
+        vector<int> &buttom = dp[dp.size()-1];
+        int result = buttom[0];
+        for (int i = 1; i < buttom.size(); ++i)
+        {
+            if (buttom[i] < result)
+            {
+                result = buttom[i];
+            }
+        }
+
+        return result;
+    }
+};
