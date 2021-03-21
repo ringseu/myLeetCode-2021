@@ -2,17 +2,33 @@ class Solution {
 public:
     vector<int> findDuplicates(vector<int>& nums) {
         vector<int> result;
-        unordered_set<int> tmp;
 
-        for (int i = 0; i < nums.size(); ++i)
+        int i = 0;
+        while (i < nums.size())
         {
-            if (tmp.end() != tmp.find(nums[i])) //之前出现过
+            int current = nums[i];
+            if (i == current-1) //current刚好在自己的位置上，跳过
             {
-                result.push_back(nums[i]);
+                ++i;
+                continue;
             }
-            else
+            else if (current == 0)  //之前被处理过，跳过
             {
-                tmp.insert(nums[i]);
+                ++i;
+                continue;
+            }
+            else if (nums[current-1] == current)    //正确的位置上已经有了同一个值，跳过
+            {
+                result.push_back(current);
+                nums[current-1] = 0;
+                ++i;
+                continue;
+            }
+            else    //把current放到正确的位置上（与下标为current-1的值交换）
+            {
+                int tmp = nums[current-1];
+                nums[current-1] = current;
+                nums[i] = tmp;
             }
         }
 
